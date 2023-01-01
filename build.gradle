@@ -1,0 +1,83 @@
+plugins {
+    id 'io.quarkus'
+    id 'java'
+    id "io.freefair.lombok" version "6.5.0.2"
+}
+
+def damlOutput = "${rootDir}/src/main/.daml/dist/daml-java-playground.dar"
+def damlCodeGenResource = "${buildDir}/generated/main/java"
+ext.damlBinPath = "$System.env.PATH" + System.getProperty("path.separator") + "~/.daml/bin"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+group "com.djplayground"
+version "1"
+
+sourceSets {
+    main {
+        java {
+            srcDir damlCodeGenResource
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation "io.quarkus:quarkus-arc"
+    implementation "io.quarkus:quarkus-hibernate-validator"
+    implementation "io.quarkus:quarkus-smallrye-reactive-messaging-kafka"
+    implementation "com.daml:bindings-java:2.5.0"
+    implementation "com.daml:bindings-rxjava:2.5.0"
+    implementation "org.slf4j:slf4j-api:1.7.36"
+
+    testImplementation "io.quarkus:quarkus-junit5"
+    testImplementation "io.quarkus:quarkus-junit5-mockito:2.9.2.Final"
+    testImplementation "org.mockito:mockito-inline:3.11.2"
+
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+task compileDaml(type: Exec) {
+    environment "PATH", damlBinPath
+    onlyIf { !file(damlOutput).exists() }
+    workingDir "${rootDir}/src/main/"
+    commandLine "daml", "build"
+}
+
+
+task damlCodegen(type: Exec) {
+    environment "PATH", damlBinPath
+    onlyIf { !file(damlCodeGenResource).exists() }
+    workingDir "${rootDir}/src/main/"
+    commandLine "daml", "codegen", "java"
+    dependsOn compileDaml
+}
+
+task damlClean {
+    delete damlOutput
+}
+
+clean {
+    dependsOn damlClean
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+    dependsOn damlCodegen
+}

@@ -1,0 +1,24 @@
+module Main where
+
+template Agreement
+  with
+    proposer: Party
+    counterparty: Party
+    payload: Text
+  where
+    signatory proposer, counterparty
+    
+template Proposal
+  with
+    proposer: Party
+    counterparty: Party
+    payload: Text
+  where
+    signatory proposer
+    observer counterparty
+
+    choice Accept : ContractId Agreement
+      controller counterparty
+      do 
+        create Agreement with ..
+    

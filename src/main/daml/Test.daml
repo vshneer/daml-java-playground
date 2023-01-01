@@ -1,0 +1,16 @@
+module Test where
+
+import Daml.Script
+
+import Main (Proposal(..), Accept(..))
+
+testIt : Script ()
+testIt = script do
+  proposer <- allocateParty "proposer"
+  counterparty <- allocateParty "counterparty"
+  let payload = "rent agreement"
+
+  proposalCid <- submit proposer do createCmd Proposal with ..
+  agrCid <- submit counterparty do exerciseCmd proposalCid Accept
+
+  pure ()
