@@ -7,7 +7,7 @@ template Agreement
     payload: Text
   where
     signatory proposer, counterparty
-    
+
 template Proposal
   with
     proposer: Party
@@ -19,6 +19,13 @@ template Proposal
 
     choice Accept : ContractId Agreement
       controller counterparty
-      do 
+      do
         create Agreement with ..
-    
+
+template Message
+  with
+    sender: Party
+    receiver: Party
+    content: Text
+  where
+    signatory sender, receiver
