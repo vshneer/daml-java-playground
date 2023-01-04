@@ -14,6 +14,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.reactivex.Flowable;
 import main.Agreement;
+import main.Message;
 import main.Proposal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,5 +91,11 @@ public class PlaygroundDamlClient implements DamlClient {
                 .getActiveContracts(filter, true)
                 .map(GetActiveContractsResponse::getCreatedEvents)
                 .flatMap(Flowable::fromIterable);
+    }
+
+    @Override
+    public void createMessageContract(Message message) {
+        ledger.getCommandClient().submitAndWaitForTransactionTree(WORK_ID, APP_ID, commandIdGenerator.generate(), message.sender,
+                Collections.singletonList(message.create())).blockingGet();
     }
 }

@@ -3,6 +3,7 @@ package com.djplayground.damlClient;
 import com.daml.ledger.javaapi.data.*;
 import com.djplayground.damlClient.parameters.AcceptProposalArguments;
 import io.reactivex.Flowable;
+import main.Message;
 import main.Proposal;
 
 import java.util.List;
@@ -41,5 +42,7 @@ public interface DamlClient {
     Flowable<TransactionTree> getTransactionTree(String subscriberParty, LedgerOffset begin);
 
     Flowable<CreatedEvent> getActiveContracts(TransactionFilter filter);
+
+    void createMessageContract(Message messageArgs);
 
 }
