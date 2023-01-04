@@ -21,4 +21,4 @@ template Proposal
       controller counterparty
       do 
         create Agreement with ..
-    
+   
