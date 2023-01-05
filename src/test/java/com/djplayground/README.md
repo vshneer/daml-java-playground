@@ -15,4 +15,9 @@
 6. Now in the debugger press "Resume Program" and debugger will stop on the next breakpoint
 7. Check Navigator browser window. You see Proposer contract here. That's it
 8. Press "Resume Program" to finish the test
-9. Exit Navigator process in the terminal window pressing Command + C 
+9. Exit Navigator process in the terminal window pressing Command + C
+
+#### See all java processes running
+```
+watch "sudo lsof -n -i -P | grep LISTEN |grep java"
+```
