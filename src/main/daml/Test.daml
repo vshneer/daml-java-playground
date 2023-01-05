@@ -4,10 +4,15 @@ import Daml.Script
 
 import Main (Proposal(..), Accept(..))
 
+allocateParties : Script((Party, Party))
+allocateParties = script do
+  proposer <- allocatePartyWithHint "proposer" (PartyIdHint "proposer")
+  counterparty <- allocatePartyWithHint "counterparty" (PartyIdHint "counterparty")
+  return (proposer, counterparty)
+
 testIt : Script ()
 testIt = script do
-  proposer <- allocateParty "proposer"
-  counterparty <- allocateParty "counterparty"
+  (proposer, counterparty) <- allocateParties
   let payload = "rent agreement"
 
   proposalCid <- submit proposer do createCmd Proposal with ..

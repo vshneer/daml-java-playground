@@ -40,6 +40,7 @@ dependencies {
     implementation "com.daml:bindings-rxjava:2.5.0"
     implementation "org.slf4j:slf4j-api:1.7.36"
 
+    testImplementation files('testlib/junit5-support.jar')
     testImplementation "io.quarkus:quarkus-junit5"
     testImplementation "io.quarkus:quarkus-junit5-mockito:2.9.2.Final"
     testImplementation "org.mockito:mockito-inline:3.11.2"
