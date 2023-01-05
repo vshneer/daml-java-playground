@@ -9,7 +9,7 @@ import main.Proposal;
 import java.util.List;
 
 /*
-*   HOMEWORK
+*   HOMEWORK 1
 *   Roni & Avraham
 *
 *   please do

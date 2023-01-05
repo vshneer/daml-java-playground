@@ -1,11 +1,11 @@
 ### How to use Navigator with tests
 
-1. Add breakpoint before and after contract creation. For example CreateProposalTest. Add breakpoints to the lines:
+1. Add breakpoint BEFORE and AFTER contract creation. For example CreateProposalTest. Add breakpoints to the lines:
     ```
     damlClient.createProposalContract(proposal);
     lookUpProposalContract();
     ```
-2. Run IT test in debug mode. 
+2. Run IT test in debug mode. Use IntelliJ IDEA debug facilities
 3. When execution stops on the breakpoint run a navigator:
     ```
     daml navigator server localhost 6865 --feature-user-management=false
