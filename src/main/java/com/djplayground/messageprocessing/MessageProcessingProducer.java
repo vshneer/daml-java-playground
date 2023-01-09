@@ -2,7 +2,6 @@ package com.djplayground.messageprocessing;
 
 import com.djplayground.conversion.kafka2daml.ToDamlProposalTranslation;
 import com.djplayground.damlClient.DamlClient;
-import com.djplayground.damlClient.implementation.PlaygroundDamlClient;
 import com.djplayground.messageprocessing.kafka.KafkaMessageProcessorProposal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
