@@ -28,4 +28,4 @@ template Message
     receiver: Party
     content: Text
   where
-    signatory sender, receiver
+    signatory sender
