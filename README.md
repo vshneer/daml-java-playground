@@ -11,4 +11,4 @@ If you got errors on Java bindings imports or Package/Template not found on test
 
 
 #### Kafka listener integration
-illustration https://miro.com/app/board/uXjVPzg5ocw=/?moveToWidget=3458764542834788804&cot=14
+[Illustration](https://miro.com/app/board/uXjVPzg5ocw=/?moveToWidget=3458764542834788804&cot=14)
