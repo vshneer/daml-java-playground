@@ -27,6 +27,3 @@ public class ProposalKafkaListener {
     }
 
 }
-
-//  daml <- java <- proposal-message-in <- consumer  kafka topic publisher <-
-//  daml -> java -> proposal-message-out-> publisher kafka topic consumer -> notification
