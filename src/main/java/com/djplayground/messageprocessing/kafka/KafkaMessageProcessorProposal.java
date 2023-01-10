@@ -4,6 +4,7 @@ import com.djplayground.conversion.kafka2daml.ToDamlProposalTranslation;
 import com.djplayground.damlClient.DamlClient;
 import com.djplayground.kafkaClient.message.KafkaMessageProposal;
 import com.djplayground.messageprocessing.MessageProcessor;
+import main.Proposal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,7 @@ public class KafkaMessageProcessorProposal extends MessageProcessor<KafkaMessage
     @Override
     public void publish(KafkaMessageProposal messagePayload) {
         logger.info("Received Proposal {}", messagePayload);
-        damlClient.createProposalContract(toDamlProposalTranslation.apply(messagePayload));
+        Proposal proposal = toDamlProposalTranslation.apply(messagePayload);
+        damlClient.createProposalContract(proposal);
     }
 }

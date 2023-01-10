@@ -22,8 +22,8 @@ public class ProposalKafkaListener {
 
     @Transactional
     @Incoming("proposal-message-in")
-    public void acceptIssuanceMessage(KafkaMessageProposal message) {
-        processor.accept(message);
+    public void acceptProposalMessage(KafkaMessageProposal messagePayload) {
+        processor.accept(messagePayload);
     }
 
 }
