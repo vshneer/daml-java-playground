@@ -8,4 +8,7 @@ import java.nio.file.Path;
 public interface PlaygroundConfiguration {
   Path proposerConfig();
   Path counterpartyConfig();
+
+  Path senderConfig();
+  Path receiverConfig();
 }

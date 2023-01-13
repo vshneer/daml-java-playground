@@ -20,6 +20,7 @@ public class AdapterConfigSourceFactory implements ConfigSourceFactory {
 
         public AdapterConfigFactory() {
             configuration.put("mp.messaging.incoming.proposal-message-in.enabled", "true");
+            configuration.put("mp.messaging.incoming.message-message-in.enabled", "true");
         }
 
 
