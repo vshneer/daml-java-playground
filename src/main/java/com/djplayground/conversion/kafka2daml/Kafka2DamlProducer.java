@@ -16,4 +16,11 @@ public class Kafka2DamlProducer {
         logger.info("created ToDamlProposalTranslation");
         return new ToDamlProposalTranslation();
     }
+
+    @ApplicationScoped
+    @Produces
+    public ToDamlMessageTranslation getMessageTranslation() {
+        logger.info("created ToDamlMessageTranslation");
+        return new ToDamlMessageTranslation();
+    }
 }

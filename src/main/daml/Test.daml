@@ -2,20 +2,24 @@ module Test where
 
 import Daml.Script
 
-import Main (Proposal(..), Accept(..))
+import Main (Proposal(..), Accept(..),Message(..))
 
-allocateParties : Script((Party, Party))
+allocateParties : Script((Party, Party , Party, Party))
 allocateParties = script do
   proposer <- allocatePartyWithHint "proposer" (PartyIdHint "proposer")
   counterparty <- allocatePartyWithHint "counterparty" (PartyIdHint "counterparty")
-  return (proposer, counterparty)
+  sender <- allocatePartyWithHint "sender" (PartyIdHint "sender")
+  receiver <- allocatePartyWithHint "receiver" (PartyIdHint "receiver")
+
+  return (proposer, counterparty,sender,receiver)
 
 testIt : Script ()
 testIt = script do
-  (proposer, counterparty) <- allocateParties
+  (proposer, counterparty,sender,receiver) <- allocateParties
   let payload = "rent agreement"
-
+      content = "HI,EVERY ONE"
   proposalCid <- submit proposer do createCmd Proposal with ..
   agrCid <- submit counterparty do exerciseCmd proposalCid Accept
+  messageCid <- submit sender do createCmd Message with ..
 
   pure ()

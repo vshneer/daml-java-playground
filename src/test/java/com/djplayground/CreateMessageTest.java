@@ -13,7 +13,7 @@ public class CreateMessageTest extends TestUtils {
     @Test
     void whenCreateCallCreateMessageThenMessageContractCreatedOnLedger(){
         damlClient = new PlaygroundDamlClient(SANDBOX_HOST, Integer.parseInt(SANDBOX_PORT));
-        Message message = new Message(proposerPartyId.getValue(), counterpartyPartyId.getValue(), "payload example");
+        Message message = new Message(senderPartyId.getValue(), receiverPartyId.getValue(), "payload example");
         damlClient.createMessageContract(message);
         lookUpMessageContract();
     }
@@ -22,7 +22,7 @@ public class CreateMessageTest extends TestUtils {
         lookUpContract(
                 Message.TEMPLATE_ID,
                 Message.ContractId::new,
-                proposerPartyId
+                senderPartyId
         );
     }
 
