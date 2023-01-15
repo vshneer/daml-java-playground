@@ -50,7 +50,6 @@ public class TestUtils {
     protected static void beforeAll() throws IOException, InterruptedException, TimeoutException {
         SANDBOX.start();
         refreshCommonTestSetUp();
-
     }
 
     @AfterAll
