@@ -2,19 +2,28 @@ package com.djplayground;
 
 import com.daml.extensions.testing.ledger.SandboxManager;
 
+import com.daml.ledger.javaapi.data.DamlRecord;
 import com.daml.ledger.javaapi.data.Identifier;
 import com.daml.ledger.javaapi.data.Party;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 public class TestUtils {
+    protected static final ObjectMapper jsonMapper = new ObjectMapper();
     public static final String SANDBOX_PORT = "6865";
     public static final String SANDBOX_HOST = "localhost";
     protected static final Path DAML_ROOT = Path.of("./src/main/").toAbsolutePath();
@@ -69,6 +78,20 @@ public class TestUtils {
         receiverPartyId = SANDBOX.getPartyId(DISPLAY_NAME_RECEIVER);
     }
 
+    protected static void produceMessageOnKafka(KafkaCompanion companion, String topic, Object[] payloads) throws IOException {
+        List<ProducerRecord<String, String>> records = generateJsonStrRecords(payloads, topic);
+        companion.produceStrings().fromRecords(records);
+    }
+
+    protected static List<ProducerRecord<String, String>> generateJsonStrRecords(Object[] payloads, String topic) throws JsonProcessingException {
+        List<ProducerRecord<String, String>> records = new ArrayList<>();
+        for (Object payload : payloads) {
+            String kafkaProducerPayload = jsonMapper.writeValueAsString(payload);
+            records.add(new ProducerRecord<>(topic, kafkaProducerPayload));
+        }
+        return records;
+    }
+
     protected static <Cid> void lookUpContract(
             Identifier contractIdentifier,
             Function<String, Cid> cidConstructor,
@@ -78,4 +101,20 @@ public class TestUtils {
                     contractIdentifier,
                     cidConstructor);
     }
+
+    protected static <Cid> void lookUpContractWithMatcher(
+            Identifier contractIdentifier,
+            Function<String, Cid> cidConstructor,
+            List<DamlRecord> matchers,
+            Party observer){
+        Assertions.assertTrue(matchers.size() > 0);
+        for (DamlRecord record: matchers) {
+            SANDBOX.getLedgerAdapter().getCreatedContractId(
+                    observer,
+                    contractIdentifier,
+                    record,
+                    cidConstructor);
+        }
+    }
+
 }
