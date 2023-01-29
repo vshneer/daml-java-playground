@@ -6,7 +6,7 @@ plugins {
 
 def damlOutput = "${rootDir}/src/main/.daml/dist/daml-java-playground.dar"
 def damlCodeGenResource = "${buildDir}/generated/main/java"
-ext.damlBinPath = "$System.env.PATH" + System.getProperty("path.separator") + "~/.daml/bin"
+ext.damlBinPath = "$System.env.PATH" + System.getProperty("path.separator") + "/home/worker/.daml/bin"
 
 repositories {
     mavenCentral()
@@ -44,6 +44,8 @@ dependencies {
     testImplementation "io.quarkus:quarkus-junit5"
     testImplementation "io.quarkus:quarkus-junit5-mockito:2.9.2.Final"
     testImplementation "org.mockito:mockito-inline:3.11.2"
+    testImplementation "org.testcontainers:kafka:1.16.3"
+    testImplementation "io.quarkus:quarkus-test-kafka-companion:2.9.0.Final"
 
 }
 
