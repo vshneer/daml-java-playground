@@ -6,9 +6,5 @@ import java.nio.file.Path;
 
 @ConfigMapping(prefix = "playground")
 public interface PlaygroundConfiguration {
-  Path proposerConfig();
-  Path counterpartyConfig();
-
-  Path senderConfig();
-  Path receiverConfig();
+  Path partiesConfig();
 }
