@@ -16,6 +16,6 @@ public class DamlAcceptProposalChoiceExerciseProcessor extends MessageProcessor<
 
     @Override
     public void publish(ExercisedEvent msg) {
-        logger.info("DamlFinalizeRejectSettlementChoiceExerciseProcessor about to publish message {}", msg);
+        logger.info("DamlAcceptProposalChoiceExerciseProcessor is about to publish message {}", msg);
     }
 }

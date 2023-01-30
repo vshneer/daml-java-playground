@@ -1,6 +1,8 @@
-package com.djplayground;
+package com.djplayground.integrationTests;
 
 import com.daml.ledger.javaapi.data.DamlRecord;
+import com.djplayground.CustomTestProfile;
+import com.djplayground.TestUtils;
 import com.djplayground.kafkaClient.message.KafkaMessageProposal;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -49,7 +51,7 @@ import static com.djplayground.CustomTestProfile.PROPOSAL_INPUT_TOPIC;
 @QuarkusTest
 @TestProfile(CustomTestProfile.class)
 @QuarkusTestResource(KafkaCompanionResource.class)
-public class CreateProposalIT extends TestUtils{
+public class CreateProposalIT extends TestUtils {
     @InjectKafkaCompanion
     KafkaCompanion companion;
 
