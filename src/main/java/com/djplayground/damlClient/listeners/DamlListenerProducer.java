@@ -21,9 +21,9 @@ public class DamlListenerProducer {
                                                                     PartyReader partyReader) {
             logger.info("Created AcceptProposalDamlListener");
             AcceptProposalDamlListener acceptProposalDamlListener = new AcceptProposalDamlListener(
-                    partyReader.getParties(),
-                    subscriber,
-                    messageProcessor);
+                    partyReader.getParties(), // List<String> list of party ids
+                    subscriber,               // establishes a stream between Ledger and Java application
+                    messageProcessor);        // processor that takes action after event occurs
             acceptProposalDamlListener.subscribe();
             return acceptProposalDamlListener;
         }
