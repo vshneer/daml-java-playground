@@ -2,12 +2,15 @@ package com.djplayground;
 
 import com.daml.extensions.testing.ledger.SandboxManager;
 
-import com.daml.ledger.javaapi.data.DamlRecord;
-import com.daml.ledger.javaapi.data.Identifier;
-import com.daml.ledger.javaapi.data.Party;
+import com.daml.ledger.javaapi.data.*;
+import com.daml.ledger.javaapi.data.codegen.Exercised;
+import com.daml.ledger.javaapi.data.codegen.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.InvalidProtocolBufferException;
 import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
+import main.Agreement;
+import main.Proposal;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +25,14 @@ import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
+import static com.daml.extensions.testing.Dsl.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class TestUtils {
+    protected static final String ADMIN_PARTY_ID = "ADMIN_PARTY_ID";
+    protected static final Identifier DUMMY_IDENTIFIER = new Identifier("", "", "");
+    protected static final String DAML_EVENT_ID = "DAML_EVENT_ID";
     protected static final ObjectMapper jsonMapper = new ObjectMapper();
     public static final String SANDBOX_PORT = "6865";
     public static final String SANDBOX_HOST = "localhost";
@@ -115,6 +125,28 @@ public class TestUtils {
                     record,
                     cidConstructor);
         }
+    }
+
+    protected static CreatedEvent getCreatedEvent(Identifier identifier) {
+        var createdEvent = mock(CreatedEvent.class);
+        when(createdEvent.getTemplateId()).thenReturn(identifier);
+        return createdEvent;
+    }
+
+    protected static Proposal.ContractId createProposalContractOnTheLedger() throws InvalidProtocolBufferException {
+        DamlRecord record = record(
+                field("proposer", proposerPartyId),
+                field("counterparty", counterpartyPartyId),
+                field("payload", text("PAYLOAD")));
+        SANDBOX.getLedgerAdapter().createContract(proposerPartyId, Proposal.TEMPLATE_ID, record);
+        Proposal.ContractId proposalContractId = SANDBOX.getLedgerAdapter().getCreatedContractId(counterpartyPartyId, Proposal.TEMPLATE_ID, Proposal.ContractId::new);
+        return proposalContractId;
+    }
+
+    protected static void exerciseAcceptProposal() throws InvalidProtocolBufferException {
+        Proposal.ContractId proposalContractId = createProposalContractOnTheLedger();
+        Update<Exercised<Agreement.ContractId>> exerciseAcceptProposalCommand = proposalContractId.exerciseAccept();
+        SANDBOX.getLedgerAdapter().exerciseChoice(counterpartyPartyId, (ExerciseCommand) exerciseAcceptProposalCommand.commands().get(0));
     }
 
 }
