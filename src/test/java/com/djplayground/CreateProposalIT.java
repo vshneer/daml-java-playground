@@ -1,6 +1,7 @@
 package com.djplayground;
 
 import com.daml.ledger.javaapi.data.DamlRecord;
+import com.djplayground.kafkaClient.message.KafkaMessageMessage;
 import com.djplayground.kafkaClient.message.KafkaMessageProposal;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;

@@ -2,6 +2,7 @@ package com.djplayground.messageprocessing.kafka;
 
 import com.djplayground.conversion.kafka2daml.ToDamlProposalTranslation;
 import com.djplayground.damlClient.DamlClient;
+import com.djplayground.kafkaClient.message.KafkaMessageMessage;
 import com.djplayground.kafkaClient.message.KafkaMessageProposal;
 import com.djplayground.messageprocessing.MessageProcessor;
 import main.Proposal;
@@ -54,4 +55,5 @@ public class KafkaMessageProcessorProposal extends MessageProcessor<KafkaMessage
         Proposal proposal = toDamlProposalTranslation.apply(messagePayload);
         damlClient.createProposalContract(proposal);
     }
+
 }
