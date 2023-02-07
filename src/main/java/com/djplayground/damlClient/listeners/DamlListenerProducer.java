@@ -29,9 +29,9 @@ public class DamlListenerProducer {
             acceptProposalDamlListener.subscribe();
             return acceptProposalDamlListener;
         }
-    @Singleton
-    @Produces
-    public AcceptMessageDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
+    //@Singleton
+    //@Produces
+    public AcceptMessageDamlListener getAcceptMessageDamlListener(DamlLedgerSubscriber subscriber,
                                                                    DamlAcceptMessageChoiceExerciseProcessor messageProcessor,
                                                                    PartyReader partyReader) {
         logger.info("Created AcceptMessageDamlListener");
@@ -42,7 +42,7 @@ public class DamlListenerProducer {
         acceptMessageDamlListener.subscribe();
         return acceptMessageDamlListener;
     }
-    }
+}
 
 
 
