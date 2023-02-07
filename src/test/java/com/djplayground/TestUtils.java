@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
 import main.Agreement;
+import main.Message;
 import main.Proposal;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.AfterAll;
@@ -147,6 +148,21 @@ public class TestUtils {
         Proposal.ContractId proposalContractId = createProposalContractOnTheLedger();
         Update<Exercised<Agreement.ContractId>> exerciseAcceptProposalCommand = proposalContractId.exerciseAccept();
         SANDBOX.getLedgerAdapter().exerciseChoice(counterpartyPartyId, (ExerciseCommand) exerciseAcceptProposalCommand.commands().get(0));
+    }
+
+    protected static Message.ContractId createMessageContractOnTheLedger() throws InvalidProtocolBufferException {
+        DamlRecord record = record(
+                field("sender", senderPartyId),
+                field("receiver", receiverPartyId),
+                field("content", text("CONTENT")));
+        SANDBOX.getLedgerAdapter().createContract(senderPartyId, Message.TEMPLATE_ID, record);
+        Message.ContractId messageContractId = SANDBOX.getLedgerAdapter().getCreatedContractId(receiverPartyId, Message.TEMPLATE_ID, Message.ContractId::new);
+        return messageContractId;
+    }
+    protected static void exerciseAcceptMessage() throws InvalidProtocolBufferException {
+        Message.ContractId messageContractId = createMessageContractOnTheLedger();
+        Update<Exercised<Agreement.ContractId>> exerciseAcceptMessageCommand = messageContractId.exerciseAcceptMessage();
+        SANDBOX.getLedgerAdapter().exerciseChoice(receiverPartyId, (ExerciseCommand) exerciseAcceptMessageCommand.commands().get(0));
     }
 
 }

@@ -38,4 +38,9 @@ public class ExerciseAcceptIT extends TestUtils {
         exerciseAcceptProposal();
     }
 
+    @Test
+    void WHEN_accept_message_exercise_on_ledger_THEN_to_be_implemented() throws InvalidProtocolBufferException {
+        exerciseAcceptMessage();
+    }
+
 }
