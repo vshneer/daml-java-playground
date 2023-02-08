@@ -5,6 +5,9 @@ import com.djplayground.messageprocessing.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+
 public class DamlAcceptMessageChoiceExerciseProcessor extends MessageProcessor<ExercisedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(DamlAcceptMessageChoiceExerciseProcessor.class);
