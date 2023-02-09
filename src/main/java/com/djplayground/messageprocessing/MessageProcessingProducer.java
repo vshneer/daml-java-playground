@@ -13,20 +13,19 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
-@ApplicationScoped
 
 public class MessageProcessingProducer {
 
     Logger logger = LoggerFactory.getLogger(MessageProcessingProducer.class);
 
-   // @ApplicationScoped
+    @ApplicationScoped
     @Produces
     KafkaMessageProcessorProposal getLedgerAdapterProcessor(DamlClient damlClient,
                                                             ToDamlProposalTranslation translation) {
         logger.info("Created KafkaProcessorProposal with damlClient {}, translation {}", damlClient, translation);
         return new KafkaMessageProcessorProposal(damlClient, translation);
     }
-
+    @ApplicationScoped
     @Produces
     KafkaMessageProcessorMessage getLedgerAdapterProcessor(DamlClient damlClient,
                                                            ToDamlMessageTranslation translation) {
@@ -34,14 +33,14 @@ public class MessageProcessingProducer {
         return new KafkaMessageProcessorMessage(damlClient, translation);
     }
 
-    //@ApplicationScoped
+    @ApplicationScoped
     @Produces
     DamlAcceptProposalChoiceExerciseProcessor getAcceptProposalChoiceExerciseProcessor(){
         logger.info("Created DamlAcceptProposalChoiceExerciseProcessor");
         return new DamlAcceptProposalChoiceExerciseProcessor();
     }
 
-    //@ApplicationScoped
+    @ApplicationScoped
     @Produces
     DamlAcceptMessageChoiceExerciseProcessor getAcceptMessageChoiceExerciseProcessor(){
         logger.info("Created DamlAcceptmessageChoiceExerciseProcessor");

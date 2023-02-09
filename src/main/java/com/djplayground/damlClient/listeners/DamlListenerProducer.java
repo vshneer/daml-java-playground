@@ -13,16 +13,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
-// https://quarkus.io/guides/cdi#applicationscoped-and-singleton-look-very-similar-which-one-should-i-choose-for-my-quarkus-application
-//
 
-@ApplicationScoped
+
 public class DamlListenerProducer {
 
     Logger logger = LoggerFactory.getLogger(DamlListenerProducer.class);
 
 
-   // @Singleton
+    @ApplicationScoped
     @Produces
     public AcceptProposalDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
                                                                     DamlAcceptProposalChoiceExerciseProcessor messageProcessor,
@@ -35,7 +33,7 @@ public class DamlListenerProducer {
             acceptProposalDamlListener.subscribe();
             return acceptProposalDamlListener;
         }
-  //  @Singleton
+    @ApplicationScoped
     @Produces
     public AcceptMessageDamlListener getAcceptMessageDamlListener(DamlLedgerSubscriber subscriber,
                                                                    DamlAcceptMessageChoiceExerciseProcessor messageProcessor,
