@@ -22,7 +22,7 @@ public class DamlListenerProducer {
     Logger logger = LoggerFactory.getLogger(DamlListenerProducer.class);
 
 
-   // @Singleton
+    @Singleton
     @Produces
     public AcceptProposalDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
                                                                     DamlAcceptProposalChoiceExerciseProcessor messageProcessor,
@@ -35,7 +35,7 @@ public class DamlListenerProducer {
             acceptProposalDamlListener.subscribe();
             return acceptProposalDamlListener;
         }
-  //  @Singleton
+    @Singleton
     @Produces
     public AcceptMessageDamlListener getAcceptMessageDamlListener(DamlLedgerSubscriber subscriber,
                                                                    DamlAcceptMessageChoiceExerciseProcessor messageProcessor,
