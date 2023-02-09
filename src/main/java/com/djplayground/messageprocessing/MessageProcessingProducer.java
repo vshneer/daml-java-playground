@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
-
 public class MessageProcessingProducer {
 
     Logger logger = LoggerFactory.getLogger(MessageProcessingProducer.class);
@@ -25,6 +24,7 @@ public class MessageProcessingProducer {
         logger.info("Created KafkaProcessorProposal with damlClient {}, translation {}", damlClient, translation);
         return new KafkaMessageProcessorProposal(damlClient, translation);
     }
+
     @ApplicationScoped
     @Produces
     KafkaMessageProcessorMessage getLedgerAdapterProcessor(DamlClient damlClient,
