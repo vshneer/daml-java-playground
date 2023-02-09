@@ -2,6 +2,7 @@ package com.djplayground.integrationTests;
 
 import com.djplayground.CustomTestProfile;
 import com.djplayground.TestUtils;
+import com.djplayground.damlClient.listeners.exercise.AcceptMessageDamlListener;
 import com.djplayground.damlClient.listeners.exercise.AcceptProposalDamlListener;
 import com.djplayground.damlClient.partyManagement.PartyPlainTextListReader;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -24,6 +25,7 @@ public class ExerciseAcceptIT extends TestUtils {
 
     @Inject
     AcceptProposalDamlListener acceptProposalDamlListener;
+    AcceptMessageDamlListener acceptMessageDamlListener;
 
     @BeforeAll
     protected static void setup() {
@@ -36,6 +38,11 @@ public class ExerciseAcceptIT extends TestUtils {
     @Test
     void WHEN_accept_proposal_exercise_on_ledger_THEN_to_be_implemented() throws InvalidProtocolBufferException {
         exerciseAcceptProposal();
+    }
+
+    @Test
+    void WHEN_accept_message_exercise_on_ledger_THEN_to_be_implemented() throws InvalidProtocolBufferException {
+        exerciseAcceptMessage();
     }
 
 }

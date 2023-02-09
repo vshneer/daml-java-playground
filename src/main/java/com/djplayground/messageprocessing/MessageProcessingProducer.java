@@ -3,6 +3,7 @@ package com.djplayground.messageprocessing;
 import com.djplayground.conversion.kafka2daml.ToDamlMessageTranslation;
 import com.djplayground.conversion.kafka2daml.ToDamlProposalTranslation;
 import com.djplayground.damlClient.DamlClient;
+import com.djplayground.messageprocessing.daml.DamlAcceptMessageChoiceExerciseProcessor;
 import com.djplayground.messageprocessing.daml.DamlAcceptProposalChoiceExerciseProcessor;
 import com.djplayground.messageprocessing.kafka.KafkaMessageProcessorMessage;
 import com.djplayground.messageprocessing.kafka.KafkaMessageProcessorProposal;
@@ -39,4 +40,10 @@ public class MessageProcessingProducer {
         return new DamlAcceptProposalChoiceExerciseProcessor();
     }
 
+    @ApplicationScoped
+    @Produces
+    DamlAcceptMessageChoiceExerciseProcessor getAcceptMessageChoiceExerciseProcessor(){
+        logger.info("Created DamlAcceptmessageChoiceExerciseProcessor");
+        return new DamlAcceptMessageChoiceExerciseProcessor();
+    }
 }

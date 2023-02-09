@@ -29,3 +29,11 @@ template Message
     content: Text
   where
     signatory sender
+    observer receiver
+    choice AcceptMessage : ContractId Agreement
+          controller receiver
+          do
+            create Agreement with
+                proposer = sender
+                counterparty = receiver
+                payload = content

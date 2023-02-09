@@ -1,6 +1,7 @@
 package com.djplayground.damlClient;
 
 import com.daml.ledger.javaapi.data.*;
+import com.djplayground.damlClient.parameters.AcceptMessageArguments;
 import com.djplayground.damlClient.parameters.AcceptProposalArguments;
 import io.reactivex.Flowable;
 import main.Message;
@@ -44,5 +45,7 @@ public interface DamlClient {
     Flowable<CreatedEvent> getActiveContracts(TransactionFilter filter);
 
     void createMessageContract(Message messageArgs);
+
+    void exerciseAcceptMessage(AcceptMessageArguments acceptMessageArguments);
 
 }

@@ -9,6 +9,7 @@ import com.daml.ledger.javaapi.data.codegen.Update;
 import com.daml.ledger.rxjava.DamlLedgerClient;
 import com.djplayground.damlClient.DamlClient;
 import com.djplayground.damlClient.commandId.RandomGenerator;
+import com.djplayground.damlClient.parameters.AcceptMessageArguments;
 import com.djplayground.damlClient.parameters.AcceptProposalArguments;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -97,5 +98,15 @@ public class PlaygroundDamlClient implements DamlClient {
     public void createMessageContract(Message message) {
         ledger.getCommandClient().submitAndWaitForTransactionTree(WORK_ID, APP_ID, commandIdGenerator.generate(), message.sender,
                 Collections.singletonList(message.create())).blockingGet();
+    }
+
+    @Override
+    public void exerciseAcceptMessage(AcceptMessageArguments acceptMessageArguments) {
+        logger.info("Exercising Accept Message choice with: {}", acceptMessageArguments);
+        Update<Exercised<Agreement.ContractId>> exerciseCreateMessages = acceptMessageArguments.getMessageCid().exerciseAcceptMessage();
+        ledger.getCommandClient()
+                .submitAndWaitForTransactionTree(WORK_ID, APP_ID, commandIdGenerator.generate(), acceptMessageArguments.getReceiverpartyId(),
+                        Collections.singletonList(exerciseCreateMessages)).blockingGet();
+        logger.info("Done exercising Create Message choice with: {}", acceptMessageArguments);
     }
 }
