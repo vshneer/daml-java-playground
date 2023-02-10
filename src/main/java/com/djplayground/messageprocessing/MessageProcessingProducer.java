@@ -27,17 +27,17 @@ public class MessageProcessingProducer {
 
     @ApplicationScoped
     @Produces
-    KafkaMessageProcessorMessage getLedgerAdapterProcessor(DamlClient damlClient,
-                                                           ToDamlMessageTranslation translation) {
-        logger.info("Created KafkaProcessorMessage with damlClient {}, translation {}", damlClient, translation);
-        return new KafkaMessageProcessorMessage(damlClient, translation);
+    DamlAcceptProposalChoiceExerciseProcessor getAcceptProposalChoiceExerciseProcessor(){
+        logger.info("Created DamlAcceptProposalChoiceExerciseProcessor");
+        return new DamlAcceptProposalChoiceExerciseProcessor();
     }
 
     @ApplicationScoped
     @Produces
-    DamlAcceptProposalChoiceExerciseProcessor getAcceptProposalChoiceExerciseProcessor(){
-        logger.info("Created DamlAcceptProposalChoiceExerciseProcessor");
-        return new DamlAcceptProposalChoiceExerciseProcessor();
+    KafkaMessageProcessorMessage getLedgerAdapterProcessor(DamlClient damlClient,
+                                                           ToDamlMessageTranslation translation) {
+        logger.info("Created KafkaProcessorMessage with damlClient {}, translation {}", damlClient, translation);
+        return new KafkaMessageProcessorMessage(damlClient, translation);
     }
 
     @ApplicationScoped

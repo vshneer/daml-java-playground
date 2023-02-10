@@ -22,7 +22,7 @@ public class MessageKafkaListener {
 
     @Transactional
     @Incoming("message-message-in")
-    public void acceptProposalMessage(KafkaMessageMessage messageContent) {
+    public void acceptMessageMessage(KafkaMessageMessage messageContent) {
         processor.accept(messageContent);
     }
 

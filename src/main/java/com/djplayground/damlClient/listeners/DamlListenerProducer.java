@@ -13,28 +13,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
-// https://quarkus.io/guides/cdi#applicationscoped-and-singleton-look-very-similar-which-one-should-i-choose-for-my-quarkus-application
-//
 
-@ApplicationScoped
+
 public class DamlListenerProducer {
 
     Logger logger = LoggerFactory.getLogger(DamlListenerProducer.class);
 
 
-    @Singleton
-    @Produces
-    public AcceptProposalDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
-                                                                    DamlAcceptProposalChoiceExerciseProcessor messageProcessor,
-                                                                    PartyReader partyReader) {
-            logger.info("Created AcceptProposalDamlListener");
-            AcceptProposalDamlListener acceptProposalDamlListener = new AcceptProposalDamlListener(
-                    partyReader.getParties(), // List<String> list of party ids
-                    subscriber,               // establishes a stream between Ledger and Java application
-                    messageProcessor);        // processor that takes action after event occurs
-            acceptProposalDamlListener.subscribe();
-            return acceptProposalDamlListener;
-        }
+
     @Singleton
     @Produces
     public AcceptMessageDamlListener getAcceptMessageDamlListener(DamlLedgerSubscriber subscriber,
@@ -48,6 +34,21 @@ public class DamlListenerProducer {
         acceptMessageDamlListener.subscribe();
         return acceptMessageDamlListener;
     }
+
+    @Singleton
+    @Produces
+    public AcceptProposalDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
+                                                                    DamlAcceptProposalChoiceExerciseProcessor messageProcessor,
+                                                                    PartyReader partyReader) {
+        logger.info("Created AcceptProposalDamlListener");
+        AcceptProposalDamlListener acceptProposalDamlListener = new AcceptProposalDamlListener(
+                partyReader.getParties(), // List<String> list of party ids
+                subscriber,               // establishes a stream between Ledger and Java application
+                messageProcessor);        // processor that takes action after event occurs
+        acceptProposalDamlListener.subscribe();
+        return acceptProposalDamlListener;
+    }
+
 }
 
 
