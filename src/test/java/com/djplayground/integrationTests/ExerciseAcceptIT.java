@@ -25,13 +25,14 @@ public class ExerciseAcceptIT extends TestUtils {
 
     @Inject
     AcceptProposalDamlListener acceptProposalDamlListener;
+    @Inject
     AcceptMessageDamlListener acceptMessageDamlListener;
-
     @BeforeAll
     protected static void setup() {
         PartyPlainTextListReader reader = Mockito.mock(PartyPlainTextListReader.class);
 
-        when(reader.getParties()).thenReturn(Collections.singletonList(counterpartyPartyId.getValue()));
+        //when(reader.getParties()).thenReturn(Collections.singletonList(counterpartyPartyId.getValue()));
+        when(reader.getParties()).thenReturn(Collections.singletonList(receiverPartyId.getValue()));
         QuarkusMock.installMockForType(reader, PartyPlainTextListReader.class);
     }
 

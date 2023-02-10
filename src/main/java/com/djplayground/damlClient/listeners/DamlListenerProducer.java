@@ -20,19 +20,6 @@ public class DamlListenerProducer {
     Logger logger = LoggerFactory.getLogger(DamlListenerProducer.class);
 
 
-    @Singleton
-    @Produces
-    public AcceptProposalDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
-                                                                    DamlAcceptProposalChoiceExerciseProcessor messageProcessor,
-                                                                    PartyReader partyReader) {
-            logger.info("Created AcceptProposalDamlListener");
-            AcceptProposalDamlListener acceptProposalDamlListener = new AcceptProposalDamlListener(
-                    partyReader.getParties(), // List<String> list of party ids
-                    subscriber,               // establishes a stream between Ledger and Java application
-                    messageProcessor);        // processor that takes action after event occurs
-            acceptProposalDamlListener.subscribe();
-            return acceptProposalDamlListener;
-        }
 
     @Singleton
     @Produces
@@ -47,6 +34,21 @@ public class DamlListenerProducer {
         acceptMessageDamlListener.subscribe();
         return acceptMessageDamlListener;
     }
+
+    @Singleton
+    @Produces
+    public AcceptProposalDamlListener getAcceptProposalDamlListener(DamlLedgerSubscriber subscriber,
+                                                                    DamlAcceptProposalChoiceExerciseProcessor messageProcessor,
+                                                                    PartyReader partyReader) {
+        logger.info("Created AcceptProposalDamlListener");
+        AcceptProposalDamlListener acceptProposalDamlListener = new AcceptProposalDamlListener(
+                partyReader.getParties(), // List<String> list of party ids
+                subscriber,               // establishes a stream between Ledger and Java application
+                messageProcessor);        // processor that takes action after event occurs
+        acceptProposalDamlListener.subscribe();
+        return acceptProposalDamlListener;
+    }
+
 }
 
 
