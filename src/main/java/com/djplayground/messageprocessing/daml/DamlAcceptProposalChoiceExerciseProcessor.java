@@ -1,35 +1,64 @@
 package com.djplayground.messageprocessing.daml;
 
 import com.daml.ledger.javaapi.data.ExercisedEvent;
+import com.djplayground.conversion.daml2kafka.ExerciseEventToKafka;
+import com.djplayground.kafkaClient.message.KafkaMessageEventId;
+import com.djplayground.kafkaClient.outgoing.KafkaSubmitter;
 import com.djplayground.messageprocessing.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/*
+*
+*   HOMEWORK 6! Zman tas :)
+*
+*   Today you a going to submit a message to Kafka as a reaction to Exercise event on the ledger.
+*   We are going to implement Integration test as well, since most of the coding work already done in predefined classes and producers
+*
+*   From the previous session you have your MessageProcessor that receives the event message from Daml
+*   Like the one that you see in this file. For Roni it would be DamlAcceptMessageChoiceExerciseProcessor
+*   Today you are going to extend it with Translation and KafkaSubmitter
+*   You can use already predefined translation and submission classes
+*   - first add two private fields for you processor: KafkaSubmitter<KafkaMessageEventId> kafkaSubmitter and ExerciseEventToKafka conversion. See lines 47,48 here
+*   - initialize them in the constructor: lines 53,54
+*   - add their logic to the publish method. See example in the current class publish method. Lines: 60-62
+*   - DONE! Our simple conversion takes eventId from the event message and publish it as a Kafka message the "eventid-message-out" topic
+*
+*   Now it's time to do the test.
+*   - you need to add kafkaAwaitCompletion to the test that you built on the previous session
+*   - for Roni it would be ExerciseAcceptMessageIT
+*   - all you need is to add these lines after the line where you exercise your choice
+
+    eventually(() -> kafkaAwaitCompletion(
+        companion,
+        EVENTID_OUTPUT_TOPIC,
+        1
+    ));
+
+*   - see working example in ExerciseAcceptDamlListenerIT
+*
+*   I strongly suggest to run the test in the debug mode with breakpoints to understand the flow.
+
+* */
+
 public class DamlAcceptProposalChoiceExerciseProcessor extends MessageProcessor<ExercisedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(DamlAcceptProposalChoiceExerciseProcessor.class);
+    private final KafkaSubmitter<KafkaMessageEventId> kafkaSubmitter;
+    private final ExerciseEventToKafka conversion;
 
-
-    public DamlAcceptProposalChoiceExerciseProcessor() {
+    public DamlAcceptProposalChoiceExerciseProcessor(KafkaSubmitter<KafkaMessageEventId> kafkaSubmitter,
+                                                     ExerciseEventToKafka conversion) {
         logger.info("Created DamlAcceptProposalChoiceExerciseProcessor");
+        this.kafkaSubmitter = kafkaSubmitter;
+        this.conversion = conversion;
     }
 
     @Override
     public void publish(ExercisedEvent msg) {
         logger.info("DamlAcceptProposalChoiceExerciseProcessor is about to publish message {}", msg);
+        var converted = conversion.exercisedEventToKafka(msg);
+        logger.info("Publishing {} to Kafka", converted);
+        kafkaSubmitter.submit(converted);
     }
 }
-/*
-ExercisedEvent{
-    witnessParties=[counterparty::12207c5abc01c9bea1172ff60f5f038a4244c6908811f6bf102472008a4b0d275c50],
-    eventId='#1220aaa5daf7e6d7a1c838b59489de92d5b296517a0a52938e6678f7d1c95ee83b64:0',
-    templateId=Identifier{packageId='23ac3523a1df82162121b226d9decfb2a459991aa182df1e82d937b75695b954', moduleName='Main', entityName='Proposal'},
-    interfaceId=Optional.empty,
-    contractId='00241e8e5773190541a8a9aca43f0b910d1427461ea92da19ac6efb44fdc5f9e63ca011220321c4a2b156c38c8ec2c7fe1b66357934907cb7b3d624d56ea28c0d08ef434ed',
-    choice='Accept',
-    choiceArgument=DamlRecord{recordId=Optional[Identifier{packageId='23ac3523a1df82162121b226d9decfb2a459991aa182df1e82d937b75695b954', moduleName='Main', entityName='Accept'}], fields=[]},
-    actingParties=[counterparty::12207c5abc01c9bea1172ff60f5f038a4244c6908811f6bf102472008a4b0d275c50], '
-    consuming=true,
-    childEventIds=[#1220aaa5daf7e6d7a1c838b59489de92d5b296517a0a52938e6678f7d1c95ee83b64:1],
-    exerciseResult=ContractId{value='000ac0c49a74dc99baa3e33468fccb7d50a0bf361d218462f193f969a3dc652c4dca011220bff401987f46c61e3c9400351309562bab13fa21b4ad333974faeafc39c167b7'}}
-*/

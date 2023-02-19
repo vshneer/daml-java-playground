@@ -12,6 +12,7 @@ import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
 import main.Agreement;
 import main.Message;
 import main.Proposal;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -20,13 +21,17 @@ import org.junit.jupiter.api.BeforeAll;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.daml.extensions.testing.Dsl.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -164,5 +169,34 @@ public class TestUtils {
         Update<Exercised<Agreement.ContractId>> exerciseAcceptMessageCommand = messageContractId.exerciseAcceptMessage();
         SANDBOX.getLedgerAdapter().exerciseChoice(receiverPartyId, (ExerciseCommand) exerciseAcceptMessageCommand.commands().get(0));
     }
+    protected static <T> void kafkaAwaitCompletion(KafkaCompanion companion, String topic, int amountOfRecords){
+        assertTrue(amountOfRecords > 0);
 
+        var consumer = companion
+                .consumeStrings()
+                .withAutoCommit()
+                .fromTopics(topic, amountOfRecords);
+
+        consumer.awaitCompletion();
+        consumer.getRecords();
+    }
+    protected void eventually(Runnable code) throws InterruptedException {
+        Instant started = Instant.now();
+        Function<Duration, Boolean> hasPassed =
+                x -> Duration.between(started, Instant.now()).compareTo(x) > 0;
+        boolean isSuccessful = false;
+        while (!isSuccessful) {
+            try {
+                code.run();
+                isSuccessful = true;
+            } catch (Throwable ignore) {
+                if (hasPassed.apply(Duration.ofSeconds(30))) {
+                    fail("Code did not succeed in time.");
+                } else {
+                    Thread.sleep(200);
+                    isSuccessful = false;
+                }
+            }
+        }
+    }
 }
