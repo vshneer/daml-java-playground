@@ -46,8 +46,9 @@ public class MessageProcessingProducer {
 
     @ApplicationScoped
     @Produces
-    DamlAcceptMessageChoiceExerciseProcessor getAcceptMessageChoiceExerciseProcessor(){
+    DamlAcceptMessageChoiceExerciseProcessor getAcceptMessageChoiceExerciseProcessor(KafkaSubmitter<KafkaMessageEventId> kafkaSubmitter,
+                                                                                     ExerciseEventToKafka conversion){
         logger.info("Created DamlAcceptmessageChoiceExerciseProcessor");
-        return new DamlAcceptMessageChoiceExerciseProcessor();
+        return new DamlAcceptMessageChoiceExerciseProcessor(kafkaSubmitter, conversion);
     }
 }

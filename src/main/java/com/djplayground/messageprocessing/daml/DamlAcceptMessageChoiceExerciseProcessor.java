@@ -1,6 +1,9 @@
 package com.djplayground.messageprocessing.daml;
 
 import com.daml.ledger.javaapi.data.ExercisedEvent;
+import com.djplayground.conversion.daml2kafka.ExerciseEventToKafka;
+import com.djplayground.kafkaClient.message.KafkaMessageEventId;
+import com.djplayground.kafkaClient.outgoing.KafkaSubmitter;
 import com.djplayground.messageprocessing.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +14,22 @@ import javax.enterprise.inject.Produces;
 public class DamlAcceptMessageChoiceExerciseProcessor extends MessageProcessor<ExercisedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(DamlAcceptMessageChoiceExerciseProcessor.class);
+    private final KafkaSubmitter<KafkaMessageEventId> kafkaSubmitter;
+    private final ExerciseEventToKafka conversion;
 
 
-    public DamlAcceptMessageChoiceExerciseProcessor() {
+    public DamlAcceptMessageChoiceExerciseProcessor(KafkaSubmitter<KafkaMessageEventId> kafkaSubmitter,
+                                                     ExerciseEventToKafka conversion) {
         logger.info("Created DamlAcceptMessageChoiceExerciseProcessor");
+        this.kafkaSubmitter = kafkaSubmitter;
+        this.conversion = conversion;
     }
-
     @Override
     public void publish(ExercisedEvent arg) {
         logger.info("DamlAcceptMessageChoiceExerciseProcessor is about to publish message {}", arg);
+        var converted = conversion.exercisedEventToKafka(arg);
+        logger.info("Publishing {} to Kafka", converted);
+        kafkaSubmitter.submit(converted);
     }
 }
 /*
